@@ -1,0 +1,27 @@
+#alembic init alembic
+#alembic revision --autogenerate -m "first revision"
+#alembic upgrade head
+
+#SQLAlchemy
+#SQLite db
+#Login
+#Dockerize the application
+#Dockerize the database
+
+#Dependencies 
+
+#LLM - OpenAI
+#Embeddings - OpenAI
+#Vector Store - FAISS
+#RAG
+#Document Loader - PyMuPDF
+#Standred Rag implimentation [Pre Retrival, Post Retrival]
+
+#Langchain Chain of Thought
+#Langchain Prompt Template
+#Langchain Tool Calling
+#Langchain Agents - OpenAI 
+#Langchain Memory - Conversation Buffer Memory 
+#Langchain Memory - Chat Message History
+
+#Tests - Pytest
