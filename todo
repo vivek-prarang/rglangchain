@@ -8,7 +8,7 @@
 #Dockerize the application
 #Dockerize the database
 
-#Dependencies 
+#Dependencies
 
 #LLM - OpenAI
 #Embeddings - OpenAI
@@ -20,8 +20,8 @@
 #Langchain Chain of Thought
 #Langchain Prompt Template
 #Langchain Tool Calling
-#Langchain Agents - OpenAI 
-#Langchain Memory - Conversation Buffer Memory 
+#Langchain Agents - OpenAI
+#Langchain Memory - Conversation Buffer Memory
 #Langchain Memory - Chat Message History
 
 #Tests - Pytest
