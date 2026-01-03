@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import auth_router
-from app.config.settings import settings
+from app.core.config import settings
 
 
 app = FastAPI(
@@ -20,8 +20,8 @@ app.add_middleware(
 
 
 app.include_router(
-    auth_router, 
-    prefix="/auth", 
+    auth_router,
+    prefix="/auth",
     tags=["Auth"],
     dependencies=[],
     )
