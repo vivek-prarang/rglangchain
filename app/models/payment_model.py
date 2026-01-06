@@ -1,85 +1,33 @@
-from sqlalchemy import (
-    BigInteger,
-    String,
-    ForeignKey,
-    DateTime,
-    Enum as SqlEnum,
-    Numeric,
-    func
-)
+from sqlalchemy import BigInteger, String, ForeignKey, DateTime, Enum as SqlEnum, Numeric, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.database import Base
 from datetime import datetime
-
 from enum import Enum
 
 
-class OrderStatus(str, Enum):
-    pending = "pending"
-    paid = "paid"
-    shipped = "shipped"
-    delivered = "delivered"
-    cancelled = "cancelled"
-
-
+class PaymentMethod(str, Enum):
+    card = "card"
+    upi = "upi"
+    net_banking = "net_banking"
+    wallet = "wallet"
+    cod = "cod"
 class PaymentStatus(str, Enum):
     pending = "pending"
+    hold="hold"
     success = "success"
     failed = "failed"
+    refunded = "refunded"
 
+class Payment(Base):
+    __tablename__ = "payments"
 
-class Order(Base):
-    __tablename__ = "orders"
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    order_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("orders.id", ondelete="CASCADE"), nullable=False, index=True)
+    amount: Mapped[float] = mapped_column(Numeric(12, 2), nullable=False)
+    method: Mapped[PaymentMethod] = mapped_column(SqlEnum(PaymentMethod), nullable=False)
+    transaction_id: Mapped[str | None] = mapped_column(String(100), unique=True)
+    status: Mapped[PaymentStatus] = mapped_column(SqlEnum(PaymentStatus), nullable=False, default=PaymentStatus.pending)
+    paid_at: Mapped[datetime | None] = mapped_column(DateTime)
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
-    id: Mapped[int] = mapped_column(
-        BigInteger,
-        primary_key=True,
-        autoincrement=True
-    )
-
-    user_id: Mapped[int] = mapped_column(
-        BigInteger,
-        ForeignKey("users.id", ondelete="CASCADE"),
-        nullable=False,
-        index=True
-    )
-
-    address_id: Mapped[int] = mapped_column(
-        BigInteger,
-        ForeignKey("addresses.id", ondelete="RESTRICT"),
-        nullable=False,
-        index=True
-    )
-
-    order_number: Mapped[str] = mapped_column(
-        String(50),
-        unique=True,
-        nullable=False,
-        index=True
-    )
-
-    total_amount: Mapped[float] = mapped_column(
-        Numeric(12, 2),
-        nullable=False
-    )
-
-    status: Mapped[OrderStatus] = mapped_column(
-        SqlEnum(OrderStatus),
-        nullable=False,
-        default=OrderStatus.pending
-    )
-
-    payment_status: Mapped[PaymentStatus] = mapped_column(
-        SqlEnum(PaymentStatus),
-        nullable=False,
-        default=PaymentStatus.pending
-    )
-
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        server_default=func.now()
-    )
-
-    # optional relationships (recommended)
-    user = relationship("User")
-    address = relationship("Address")
+    order = relationship("Order", back_populates="payments")
